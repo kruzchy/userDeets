@@ -3,9 +3,25 @@ import {View, Text, StyleSheet, TextInput, Button, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import colors from '../assets/colors';
 import { useForm, Controller } from "react-hook-form";
+import AsyncStorage from '@react-native-community/async-storage';
+import {UserContext} from '../contexts/userContext';
 const SignUpForm = () => {
     const { control, handleSubmit, errors, watch } = useForm();
-    const onSubmit = data => Alert.alert("Form Data", JSON.stringify(data));
+    const [user, setUser] = React.useContext(UserContext);
+    const storeUserData = async (data) => {
+        try {
+            const jsonValue = JSON.stringify(data);
+            await AsyncStorage.setItem('userData', jsonValue);
+            console.log('data stored');
+
+        } catch (e) {
+            console.log(e);
+        }
+    };
+    const onSubmit = async (data) => {
+        await storeUserData(data);
+        setUser(data);
+    };
     return (
         <View style={styles.formContainer}>
             <Text style={styles.titleText}>Don't have an account?</Text>
