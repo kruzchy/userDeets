@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TextInput, Button, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import colors from '../assets/colors';
 import { useForm, Controller } from "react-hook-form";
 const SignUpForm = () => {
+    const { control, handleSubmit, errors, watch } = useForm();
+    const onSubmit = data => Alert.alert("Form Data", JSON.stringify(data));
     return (
         <View style={styles.formContainer}>
             <Text style={styles.titleText}>Don't have an account?</Text>
@@ -11,23 +13,68 @@ const SignUpForm = () => {
             <View style={styles.formWrapper}>
                 <View style={styles.fieldsContainer}>
                     <View style={styles.inputWrapper}>
-                        <TextInput placeholder={'Full name'} style={styles.input}/>
+                        <Controller
+                            control={control}
+                            name={'fullName'}
+                            rules={{required:'This field is required', maxLength: 120}}
+                            onChange={args => args[0].nativeEvent.text}
+                            defaultValue=""
+                            as={<TextInput placeholder={'Full name'} style={styles.input}/>}
+                        />
                         <Icon name={'user'} color={colors.gray500} style={styles.icon}/>
                     </View>
+                    {errors.fullName && <Text style={styles.error}><Icon name={'warning'}/>{errors.fullName.message}</Text>}
                     <View style={styles.inputWrapper}>
-                        <TextInput placeholder={'Email'} style={styles.input}/>
+                        <Controller
+                            control={control}
+                            name={'email'}
+                            rules={{
+                                required:'This field is required',
+                                pattern: {
+                                    value: /^\S+@\S+$/i,
+                                    message: 'Not a valid email address',
+                                }}}
+                            onChange={args => args[0].nativeEvent.text}
+                            defaultValue=""
+                            as={<TextInput placeholder={'Email'} style={styles.input}/>}
+                        />
                         <Icon name={'envelope'} color={colors.gray500} style={styles.icon}/>
                     </View>
+                    {errors.email && <Text style={styles.error}><Icon name={'warning'}/>{errors.email.message}</Text>}
                     <View style={styles.inputWrapper}>
-                        <TextInput placeholder={'Password'} style={styles.input} secureTextEntry={true}/>
+                        <Controller
+                            control={control}
+                            name={'password'}
+                            rules={{
+                                required:'This field is required',
+                                minLength: {
+                                    value: 8,
+                                    message: "Password must have at least 8 characters"
+                                }}}
+                            onChange={args => args[0].nativeEvent.text}
+                            defaultValue=""
+                            as={<TextInput placeholder={'Password'} style={styles.input} secureTextEntry={true}/>}
+                        />
                         <Icon name={'key'} color={colors.gray500} style={styles.icon}/>
                     </View>
+                    {errors.password && <Text style={styles.error}><Icon name={'warning'}/>{errors.password.message}</Text>}
                     <View style={styles.inputWrapper}>
-                        <TextInput placeholder={'Confirm password'} style={styles.input} secureTextEntry={true}/>
+                        <Controller
+                            control={control}
+                            name={'confirmPassword'}
+                            rules={{
+                                required:'This field is required',
+                                validate: value => value === watch('password') || 'The passwords do not match',
+                            }}
+                            onChange={args => args[0].nativeEvent.text}
+                            defaultValue=""
+                            as={<TextInput placeholder={'Confirm password'} style={styles.input} secureTextEntry={true}/>}
+                        />
                         <Icon name={'key'} color={colors.gray500} style={styles.icon}/>
                     </View>
+                    {errors.confirmPassword && <Text style={styles.error}><Icon name={'warning'}/>{errors.confirmPassword.message}</Text>}
                 </View>
-                <Button onPress={() => Alert.alert('yes bro')} title={'SIGN UP'} style={styles.submitBtn}/>
+                <Button onPress={handleSubmit(onSubmit)} title={'SIGN UP'} style={styles.submitBtn}/>
             </View>
             <Text style={styles.loginHelpText}>Already have an account? <Text style={styles.loginText}>LOGIN</Text></Text>
         </View>
@@ -41,6 +88,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.gray300,
         height:'auto',
         borderRadius: 10,
+        width: 300,
         overflow: 'hidden',
     },
     titleText: {
@@ -73,6 +121,12 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         backgroundColor: colors.gray400,
         width: 250,
+    },
+    error: {
+        marginTop: -10,
+        marginBottom: 10,
+        color: colors.orange500,
+        marginLeft: 10,
     },
     submitBtn: {
         height: 20,
