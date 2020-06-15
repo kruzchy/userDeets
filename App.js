@@ -1,11 +1,11 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import colors from './assets/colors';
+import SignUpForm from './components/sign-up-form';
 const App = () => {
     return (
         <View style={styles.container}>
-          <Text>
-            Hello world
-          </Text>
+            <SignUpForm/>
         </View>
     );
 };
