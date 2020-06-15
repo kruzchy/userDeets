@@ -1,13 +1,12 @@
 import React from 'react';
 import {View, StyleSheet, ScrollView, Text, Button} from 'react-native';
 import colors from '../assets/colors';
-import SignUpForm from '../components/sign-up-form';
 import Header from '../components/header';
 import {UserContext} from '../contexts/userContext';
 import AsyncStorage from '@react-native-community/async-storage';
-import {Redirect} from 'react-router-native'
+import LogInForm from '../components/log-in-form';
 import Profile from './profile';
-const Home = (props) => {
+const Login = (props) => {
     const removeUserData = async () => {
         try {
             await AsyncStorage.removeItem('userData');
@@ -24,11 +23,11 @@ const Home = (props) => {
             <Header/>
             <View style={styles.main}>
                 {!user ?
-                <View style={styles.signUpContainer}>
-                    <SignUpForm />
-                </View>
-                :
-                <Profile/>
+                    <View style={styles.signUpContainer}>
+                        <LogInForm />
+                    </View>
+                    :
+                    <Profile/>
                 }
             </View>
         </ScrollView>
@@ -53,6 +52,6 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Home;
+export default Login;
 
 

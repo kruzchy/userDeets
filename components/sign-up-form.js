@@ -1,23 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TextInput, Button, Alert} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Button} from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import colors from '../assets/colors';
 import { useForm, Controller } from "react-hook-form";
 import AsyncStorage from '@react-native-community/async-storage';
-import {UserContext} from '../contexts/userContext';
+import {UserContext, storeUserData} from '../contexts/userContext';
+import { Link} from 'react-router-native';
 const SignUpForm = () => {
     const { control, handleSubmit, errors, watch } = useForm();
     const [user, setUser] = React.useContext(UserContext);
-    const storeUserData = async (data) => {
-        try {
-            const jsonValue = JSON.stringify(data);
-            await AsyncStorage.setItem('userData', jsonValue);
-            console.log('data stored');
 
-        } catch (e) {
-            console.log(e);
-        }
-    };
     const onSubmit = async (data) => {
         await storeUserData(data);
         setUser(data);
@@ -92,7 +84,8 @@ const SignUpForm = () => {
                 </View>
                 <Button onPress={handleSubmit(onSubmit)} title={'SIGN UP'} style={styles.submitBtn}/>
             </View>
-            <Text style={styles.loginHelpText}>Already have an account? <Text style={styles.loginText}>LOGIN</Text></Text>
+            <Text style={styles.loginHelpText}>Already have an account? </Text>
+            <Link to={'/login'} underlayColor="none"><Text style={styles.loginText}>LOGIN</Text></Link>
         </View>
     );
 };
