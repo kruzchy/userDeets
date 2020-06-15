@@ -4,17 +4,32 @@ import colors from './assets/colors';
 import SignUpForm from './components/sign-up-form';
 const App = () => {
     return (
-        <View style={styles.container}>
-            <SignUpForm/>
+        <View style={styles.main}>
+            <Text style={styles.title}>
+                UserDeets
+            </Text>
+            <View style={styles.signUpContainer}>
+                <SignUpForm/>
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    title: {
+      fontSize: 40,
+        color: colors.blue700,
+        flex: 0.2,
+    },
+    main: {
+        alignItems: 'center',
+        padding: 15,
+        flex: 1,
+    },
+  signUpContainer: {
+        flex: 0.7,
+        alignItems: 'center',
+      justifyContent: 'center',
   },
 });
 
